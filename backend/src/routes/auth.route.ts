@@ -1,14 +1,15 @@
 import  { Router } from 'express'
+import { emailPasswordValidator } from '../validation/auth.validator'
 
 
 const route = Router()
 
-route.post('/register' , (req, res) =>{
+route.post('/register' , emailPasswordValidator,  (req, res) =>{
 
     res.send("registration side is reached")
 })
 
-route.post("/login" , (req, res) =>{
+route.post("/login", emailPasswordValidator, (req, res) =>{
     res.send("login part is reached")
 })
 

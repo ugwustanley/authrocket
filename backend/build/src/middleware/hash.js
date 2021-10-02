@@ -55,11 +55,11 @@ function hashItem(item) {
     });
 }
 exports.hashItem = hashItem;
-function validateHash(hashPassword, password) {
+function validateHash(hashedItem, item) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, bcrypt_1.default.compare(password, hashPassword)];
+                case 0: return [4 /*yield*/, bcrypt_1.default.compare(item, hashedItem)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });

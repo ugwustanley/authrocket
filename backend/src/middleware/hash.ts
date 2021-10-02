@@ -11,7 +11,7 @@ export async function hashItem(item:string){
 
 
 
-export async function validateHash(hashPassword:string , password:string){
+export async function validateHash(hashedItem:string , item:string){
 
-    return await bcrypt.compare(password, hashPassword)
+    return await bcrypt.compare(item, hashedItem)
 }
