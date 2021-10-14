@@ -35,24 +35,215 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userLogin = exports.userRegister = void 0;
-function userRegister(req, res) {
+exports.confirmEmail = exports.getApiKey = exports.getUsers = exports.userLogin = exports.userRegister = void 0;
+var keyServices_1 = require("../middleware/keyServices");
+var auth_service_1 = require("../services/auth.service");
+var hash_1 = require("../middleware/hash");
+var auth_1 = require("../middleware/auth");
+var mailer_1 = __importDefault(require("../middleware/mailer"));
+var customError_1 = __importDefault(require("../middleware/customError"));
+/**
+ *
+ * @param req
+ * @param res
+ */
+function userRegister(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, email, password, payload;
+        var _a, auth, user, payload, isApiKeyValid, hashedPassword, uuid, data, body;
         return __generator(this, function (_b) {
-            _a = req.body, email = _a.email, password = _a.password, payload = _a.payload;
-            res.status(200).send("registeration successful");
-            return [2 /*return*/];
+            switch (_b.label) {
+                case 0:
+                    _a = req.body, auth = _a.auth, user = _a.user, payload = _a.payload;
+                    console.log("this is from register");
+                    if (!auth || !user)
+                        next(new customError_1.default("auth or user data not provided"));
+                    if (!auth.appName || !auth.apiKey)
+                        next(new customError_1.default("auth details not complete"));
+                    if (!user.email || !user.password)
+                        throw new customError_1.default("user data not complete");
+                    return [4 /*yield*/, keyServices_1.validateKey(auth.apiKey)];
+                case 1:
+                    isApiKeyValid = _b.sent();
+                    if (!isApiKeyValid) {
+                        next(new customError_1.default("api key is not valid"));
+                    }
+                    return [4 /*yield*/, hash_1.hashItem(user.password)];
+                case 2:
+                    hashedPassword = _b.sent();
+                    return [4 /*yield*/, keyServices_1.generateUuid()];
+                case 3:
+                    uuid = _b.sent();
+                    return [4 /*yield*/, auth_service_1._userRegister(user.email, hashedPassword, auth.apiKey, uuid, auth.appName, payload || null, next).catch(function (err) {
+                            next(err);
+                        })];
+                case 4:
+                    data = _b.sent();
+                    if (!data)
+                        new customError_1.default("An error occurred");
+                    if (data) {
+                        try {
+                            body = "\n            <img style=\"width:50%;display:block;margin:auto\" src=\"https://i.ibb.co/g4ZFJ0G/cover.png\">\n            <h2 style=\"text-align:center\">verify your email address</h2>\n            <p style=\"padding-bottom:1rem;\">Please confirm that you want to use this as your " + data.appName + " account email address.</p>\n            <a style=\"display:block;margin:auto;text-align:center;\" href=\"http:localhost:8080/v1/users/confirm/" + data.uuid + "\"><button style=\"padding:1rem;color:#fff;background:#553d83;margin:auto;text-align:center;width:100%;border:none;outline:none;\">Confirm Email Address</button></a>\n\n            <p style=\"padding:7px\">Or paste the below link to your browser</p>\n            <p>http:localhost:8080/v1/users/confirm/" + data.uuid + "</p>\n            ";
+                            mailer_1.default(data.email, "Confirm Email Addresss", body || "this is to test out our application click https://gmail.com");
+                        }
+                        catch (err) {
+                            next(err);
+                        }
+                        // const jwt = await generateJwtToken(data.uuid).catch(err => next(err));
+                        res
+                            .status(200)
+                            .send({
+                            success: true,
+                            message: "Registration successful",
+                            data: data || null,
+                        });
+                    }
+                    return [2 /*return*/];
+            }
         });
     });
 }
 exports.userRegister = userRegister;
-function userLogin(req, res) {
+/**
+ *
+ * @param req
+ * @param res
+ */
+function userLogin(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/];
+        var _a, auth, user, isApiKeyValid, data, jwt;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = req.body, auth = _a.auth, user = _a.user;
+                    if (!auth || !user)
+                        next(new customError_1.default("auth or user data not provided"));
+                    if (!auth.appName || !auth.apiKey)
+                        next(new customError_1.default("auth details not complete"));
+                    if (!user.email || !user.password)
+                        throw new customError_1.default("user data not complete");
+                    return [4 /*yield*/, keyServices_1.validateKey(auth.apiKey)];
+                case 1:
+                    isApiKeyValid = _b.sent();
+                    if (!isApiKeyValid) {
+                        next(new customError_1.default("api key is not valid"));
+                    }
+                    return [4 /*yield*/, auth_service_1._userLogin(user.email, user.password, next).catch(function (err) {
+                            next(err);
+                        })];
+                case 2:
+                    data = _b.sent();
+                    if (!data)
+                        throw new customError_1.default("An error occured");
+                    if (!data) return [3 /*break*/, 4];
+                    return [4 /*yield*/, auth_1.generateJwtToken(data.uuid, next).catch(function (err) {
+                            return next(err);
+                        })];
+                case 3:
+                    jwt = _b.sent();
+                    res
+                        .status(200)
+                        .send({
+                        success: true,
+                        message: "User Login successful",
+                        token: jwt,
+                        data: data || null,
+                    });
+                    _b.label = 4;
+                case 4: return [2 /*return*/];
+            }
         });
     });
 }
 exports.userLogin = userLogin;
+function getUsers(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var apiKey, isApiKeyValid, users;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    apiKey = req.params.id;
+                    return [4 /*yield*/, keyServices_1.validateKey(apiKey)];
+                case 1:
+                    isApiKeyValid = _a.sent();
+                    if (!isApiKeyValid) {
+                        next(new customError_1.default("api key is not valid"));
+                    }
+                    return [4 /*yield*/, auth_service_1._getUsers(apiKey).catch(function (err) { return next(err); })];
+                case 2:
+                    users = _a.sent();
+                    // if(!users) new CustomError("An error occured while trying to get users")
+                    if (users) {
+                        // const jwt = await generateJwtToken(data.uuid).catch(err => next(err));
+                        res
+                            .status(200)
+                            .send({
+                            success: true,
+                            message: "users data return successful",
+                            data: users || null,
+                        });
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getUsers = getUsers;
+function getApiKey(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var uuid, isUuidValid, apiKey;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    uuid = req.params.id;
+                    return [4 /*yield*/, keyServices_1.validateUuid(uuid)];
+                case 1:
+                    isUuidValid = _a.sent();
+                    if (!isUuidValid) {
+                        next(new customError_1.default("uuid is not valid"));
+                    }
+                    if (!isUuidValid) return [3 /*break*/, 3];
+                    return [4 /*yield*/, keyServices_1.convertToApiKey(uuid)];
+                case 2:
+                    apiKey = _a.sent();
+                    if (!apiKey)
+                        next(new customError_1.default("api key could not be generated"));
+                    if (apiKey)
+                        res.status(200).send({ uuid: uuid, apiKey: apiKey });
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getApiKey = getApiKey;
+function confirmEmail(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var uuid, isUuidValid;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    uuid = req.params.id;
+                    if (!uuid)
+                        next(new customError_1.default("uuid is not provided"));
+                    return [4 /*yield*/, keyServices_1.validateUuid(uuid)];
+                case 1:
+                    isUuidValid = _a.sent();
+                    if (!isUuidValid) {
+                        next(new customError_1.default("uuid is not valid"));
+                    }
+                    try {
+                        //await _confirmEmail(uuid:string)
+                    }
+                    catch (error) {
+                        next(error);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.confirmEmail = confirmEmail;

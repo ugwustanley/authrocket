@@ -19,6 +19,18 @@ var userSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    appName: {
+        type: String,
+        required: true,
+    },
+    uuid: {
+        type: String,
+        required: true,
+    },
+    isEmailVerified: {
+        type: Boolean,
+        required: true,
+    },
     payload: {
         type: Object,
         required: false,

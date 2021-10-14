@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 
 
-const dbURI:string = String( process.env.MONGO_URI )
+const dbURI:string = "mongodb+srv://ugwustanley:unn247790@cluster0.kxnme.mongodb.net/test"
+//String( process.env.MONGO_URI )
 
 
 // interface Options{

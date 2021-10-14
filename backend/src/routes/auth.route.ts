@@ -1,17 +1,27 @@
 import  { Router } from 'express'
-import { emailPasswordValidator } from '../validation/auth.validator'
+import { emailPasswordValidator , registerValidator , loginValidator } from '../validation/auth.validator'
+import { userLogin,  userRegister , getUsers, getApiKey, confirmEmail } from '../controllers/auth.controller'
+import RequestAuthentication from '../middleware/auth'
+import {generateKey} from '../middleware/keyServices'
 
 
 const route = Router()
 
-route.post('/register' , emailPasswordValidator,  (req, res) =>{
 
-    res.send("registration side is reached")
-})
+route.post('/register' , registerValidator, userRegister )
 
-route.post("/login", emailPasswordValidator, (req, res) =>{
-    res.send("login part is reached")
-})
+route.post("/login", loginValidator , userLogin)
+
+route.get("/confirm/:id", confirmEmail)
+
+route.use(RequestAuthentication)
+
+route.get('/key', (req, res) =>{   res.send(generateKey()) })
+
+route.get('/getkey/:id', getApiKey )
+
+route.get("/getusers/:id", getUsers)
+
 
 export default route;
 

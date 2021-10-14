@@ -36,8 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailPasswordValidator = void 0;
+exports.loginValidator = exports.registerValidator = exports.emailPasswordValidator = void 0;
 var validate_models_1 = require("../models/validate.models");
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 var emailPasswordValidator = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var requestData, data, error_1;
     return __generator(this, function (_a) {
@@ -64,3 +70,59 @@ var emailPasswordValidator = function (req, res, next) { return __awaiter(void 0
     });
 }); };
 exports.emailPasswordValidator = emailPasswordValidator;
+var registerValidator = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var requestData, data, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                requestData = req.body;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, validate_models_1.registerSchema.validateAsync(requestData)];
+            case 2:
+                data = _a.sent();
+                if (data) {
+                    next();
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                error_2 = _a.sent();
+                next(error_2);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.registerValidator = registerValidator;
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+var loginValidator = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var requestData, data, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                requestData = req.body;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, validate_models_1.loginSchema.validateAsync(requestData)];
+            case 2:
+                data = _a.sent();
+                if (data) {
+                    next();
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                error_3 = _a.sent();
+                next(error_3);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.loginValidator = loginValidator;

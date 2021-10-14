@@ -1,6 +1,11 @@
- 
- 
- 
+
+ /**
+  * 
+  * @param success 
+  * @param message 
+  * @param data 
+  * @returns 
+  */
  export  const response = ( success?: boolean, message?:string , data?:any) =>{
 
        interface response{

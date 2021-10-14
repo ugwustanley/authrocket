@@ -39,41 +39,57 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateHash = exports.hashItem = void 0;
-var bcrypt_1 = __importDefault(require("bcrypt"));
+exports.generateJwtToken = void 0;
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var customError_1 = __importDefault(require("./customError"));
 /**
  *
- * @param item
+ * @param req
+ * @param res
+ * @param next
  * @returns
  */
-function hashItem(item) {
+function RequestAuthentication(req, res, next) {
+    var token = req.headers.authorization;
+    var jwtSecret = process.env.JWT_SECRET || "stanlee";
+    if (!token)
+        return next(new customError_1.default("This request is unauthorized"));
+    jsonwebtoken_1.default.verify(token, jwtSecret, function (err, data) {
+        if (err)
+            return next(new customError_1.default("This request is unauthorized"));
+        req.user = data;
+        next();
+    });
+}
+exports.default = RequestAuthentication;
+/**
+ *
+ * @param data
+ * @returns string
+ */
+function generateJwtToken(data, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var salt;
+        var jwtSecret, token, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, bcrypt_1.default.genSalt(10)];
+                case 0:
+                    jwtSecret = process.env.JWT_SECRET || "stanlee";
+                    _a.label = 1;
                 case 1:
-                    salt = _a.sent();
-                    return [2 /*return*/, bcrypt_1.default.hash(item, salt)];
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, jsonwebtoken_1.default.sign({ id: data }, jwtSecret, { algorithm: "HS512", expiresIn: "10d" })];
+                case 2:
+                    token = _a.sent();
+                    if (token)
+                        return [2 /*return*/, token];
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    next(error_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
 }
-exports.hashItem = hashItem;
-/**
- *
- * @param hashedItem
- * @param item
- * @returns
- */
-function validateHash(item, hashedItem) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, bcrypt_1.default.compare(item, hashedItem)];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-exports.validateHash = validateHash;
+exports.generateJwtToken = generateJwtToken;

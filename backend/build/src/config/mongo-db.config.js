@@ -4,7 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-var dbURI = String(process.env.MONGO_URI);
+var dbURI = "mongodb+srv://ugwustanley:unn247790@cluster0.kxnme.mongodb.net/test";
+//String( process.env.MONGO_URI )
 // interface Options{
 //     useNewUrlParser: boolean,
 //     useCreateIndex: boolean,

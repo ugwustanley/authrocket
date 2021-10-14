@@ -10,8 +10,10 @@ import errorHandler from './src/middleware/error'
 
 import CustomError from './src/middleware/customError'
 
-const bodyParser = require('body-parser')
+import initDB from './src/config/mongo-db.config'
 
+const bodyParser = require('body-parser')
+require("dotenv").config()
 
 const app = express();
 
@@ -37,11 +39,11 @@ app.get("*" , (req: Request, res: Response) =>{
 )
 
 // Error
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 
-    throw new CustomError(error.message || "IN_APP ERROR OCCURED", 400 , null)
+//     throw new CustomError( "IN_APP ERROR OCCURED", 400 , null)
 
-});
+// });
 
 app.use(errorHandler)
 
@@ -49,4 +51,5 @@ const PORT = process.env.PORT || 8080
 
 app.listen(PORT , () =>{
     console.log(`port running at ${PORT}`)
+    initDB()
 })

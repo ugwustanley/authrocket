@@ -30,6 +30,12 @@ var CustomError = /** @class */ (function (_super) {
 exports.default = CustomError;
 var ValidationError = /** @class */ (function (_super) {
     __extends(ValidationError, _super);
+    /**
+     *
+     * @param message
+     * @param status
+     * @param data
+     */
     function ValidationError(message, status, data) {
         var _this = _super.call(this, message) || this;
         _this.name = "ValidationError";
@@ -42,6 +48,12 @@ var ValidationError = /** @class */ (function (_super) {
 exports.ValidationError = ValidationError;
 var AuthenticationError = /** @class */ (function (_super) {
     __extends(AuthenticationError, _super);
+    /**
+     *
+     * @param message
+     * @param status
+     * @param data
+     */
     function AuthenticationError(message, status, data) {
         var _this = _super.call(this, message) || this;
         _this.name = "AuthenticationError";

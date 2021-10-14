@@ -1,4 +1,17 @@
-import mongoose from 'mongoose'
+
+import mongoose, {Document} from 'mongoose'
+
+
+
+ export interface IUserSchema extends Document {
+     email:string,
+     password:string, 
+     apiKey:string,
+     appName:string,
+     uuid:string,
+     isEmailVerified:string,
+     payload:object;
+ }
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -12,6 +25,18 @@ const userSchema = new mongoose.Schema({
     },
     apiKey: {
         type: String,
+        required: true,
+    },
+    appName: {
+        type: String,
+        required: true,
+    },
+    uuid: {
+        type: String,
+        required: true,
+    },
+    isEmailVerified: {
+        type: Boolean,
         required: true,
     },
     payload: {
@@ -40,4 +65,4 @@ const apiKeySchema = new mongoose.Schema({
 
 export const apiKey = mongoose.model("key", apiKeySchema);
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model<IUserSchema>("User", userSchema);

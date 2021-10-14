@@ -15,6 +15,12 @@ export default class CustomError extends Error {
 export class ValidationError extends Error {
     data?: any
     status?: number
+    /**
+     * 
+     * @param message 
+     * @param status 
+     * @param data 
+     */
     constructor(message?: string, status?: number, data?:any) {
       super(message); // (1)
       this.name = "ValidationError";
@@ -26,6 +32,12 @@ export class ValidationError extends Error {
 export  class AuthenticationError extends Error {
     data?: any
     status?: number
+    /**
+     * 
+     * @param message 
+     * @param status 
+     * @param data 
+     */
     constructor(message?: string, status?: number, data?:any) {
       super(message); 
       this.name = "AuthenticationError";
