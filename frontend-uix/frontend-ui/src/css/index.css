@@ -1,0 +1,58 @@
+:root{
+    --primary: #011627 ;
+    --secondary: #5c4599;
+}
+/* #272b34 */
+/*  #011627*/
+.login{
+    background:red;
+    padding:0;
+    margin:0;
+    overflow:hidden;
+  
+}
+.form{
+    display:grid;
+    background:var(--primary);
+    height:100vh;
+    align-items:center;
+    width:100%;
+    margin:auto;  
+    padding:0;
+}
+.form-box{
+    width:100%;
+    max-width:500px;
+    margin:auto;
+}
+.login .form input{
+    display:block;
+    margin:.6rem auto;
+    padding:.6rem 1rem;
+    /* margin:1rem; */
+    outline:none;
+    border:none;
+    width:calc(100%);
+    border-radius:2rem;
+}
+
+.auth-btn{
+    border-radius:2.2rem;
+    border:none;
+    padding:.8rem 1rem;
+    font-size:1.1rem;
+    font-weight:600;
+    outline:none !important;
+    margin-top:1rem;
+    width:100%;
+    background:var(--secondary);
+}
+
+.auth-right{
+    height:100vh;
+    background-color:pink;
+    margin:0;
+    background-image:url('../images/abst.jpg');
+    background-size:cover;
+    background-position:center center;
+}

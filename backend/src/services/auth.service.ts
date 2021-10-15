@@ -69,7 +69,13 @@ export const _getUsers = async (apiKey:string) =>{
 }
 
 export const _confirmEmail = async (uuid:string) =>{
+ 
+    const user = User.findOneAndUpdate({uuid}, {$set:{isEmailVerified:true}}, {new: true});
 
+    if(!user) return
+
+    return user
+    
 
 }
 

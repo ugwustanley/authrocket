@@ -61,13 +61,14 @@ export async function userRegister(
   if (data) {
     try {
       const body = `
-            <img style="width:50%;display:block;margin:auto" src="https://i.ibb.co/g4ZFJ0G/cover.png">
-            <h2 style="text-align:center">verify your email address</h2>
-            <p style="padding-bottom:1rem;">Please confirm that you want to use this as your ${data.appName} account email address.</p>
-            <a style="display:block;margin:auto;text-align:center;" href="http:localhost:8080/v1/users/confirm/${data.uuid}"><button style="padding:1rem;color:#fff;background:#553d83;margin:auto;text-align:center;width:100%;border:none;outline:none;">Confirm Email Address</button></a>
+            <img style="width:220px;display:block;margin:auto" src="https://i.ibb.co/DkDnnZW/sent-removebg-preview.png">
+            <h2 style="text-align:center;font-size:20px;">Verify your email address</h2>
+            <p style="padding-bottom:.1rem;text-align:center">Please confirm that you want to use ${data.email} as your ${data.appName} account email address.</p>
+            <p style="text-align:center">Verify this email address by clicking the button below</p>
+            <a style="display:block;margin:auto;text-align:center;margin-top:2rem;margin-bottom:2rem;text-decoration:none;" href="http:localhost:8080/v1/users/confirm/${data.uuid}"><button style="padding:1rem;color:#fff;background:#553d83;display:block;margin:auto;text-align:center;border:none;outline:none;">Confirm Email Address</button></a>
 
-            <p style="padding:7px">Or paste the below link to your browser</p>
-            <p>http:localhost:8080/v1/users/confirm/${data.uuid}</p>
+            <p style="padding:7px;text-align:center;">Or copy and paste the below link to your browser</p>
+            <p style="color:blue;text-align:center">http:localhost:8080/v1/users/confirm/${data.uuid}</p>
             `;
       SendMail(
         data.email,
@@ -189,6 +190,9 @@ export async function getApiKey(
   }
 }
 
+
+
+
 export async function confirmEmail(
   req: Request,
   res: Response,
@@ -205,7 +209,19 @@ export async function confirmEmail(
         next(new CustomError("uuid is not valid"));
    }
    try {
-       //await _confirmEmail(uuid:string)
+
+       const user = await _confirmEmail(uuid)
+
+      // res.redirect('/v1/users/login');
+      //window.location.href = "/v1/users/login"
+
+    //    res.status(200).send({
+    //     success: true,
+    //     message: "User email address confirmed",
+    //     data: user || null,
+    //   });
+     res.send("Email address  confirmed. revisit our site to log into your account")
+     
 
    } catch (error) {
        next(error)

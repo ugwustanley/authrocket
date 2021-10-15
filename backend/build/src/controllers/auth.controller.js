@@ -86,7 +86,7 @@ function userRegister(req, res, next) {
                         new customError_1.default("An error occurred");
                     if (data) {
                         try {
-                            body = "\n            <img style=\"width:50%;display:block;margin:auto\" src=\"https://i.ibb.co/g4ZFJ0G/cover.png\">\n            <h2 style=\"text-align:center\">verify your email address</h2>\n            <p style=\"padding-bottom:1rem;\">Please confirm that you want to use this as your " + data.appName + " account email address.</p>\n            <a style=\"display:block;margin:auto;text-align:center;\" href=\"http:localhost:8080/v1/users/confirm/" + data.uuid + "\"><button style=\"padding:1rem;color:#fff;background:#553d83;margin:auto;text-align:center;width:100%;border:none;outline:none;\">Confirm Email Address</button></a>\n\n            <p style=\"padding:7px\">Or paste the below link to your browser</p>\n            <p>http:localhost:8080/v1/users/confirm/" + data.uuid + "</p>\n            ";
+                            body = "\n            <img style=\"width:220px;display:block;margin:auto\" src=\"https://i.ibb.co/DkDnnZW/sent-removebg-preview.png\">\n            <h2 style=\"text-align:center;font-size:20px;\">Verify your email address</h2>\n            <p style=\"padding-bottom:.1rem;text-align:center\">Please confirm that you want to use " + data.email + " as your " + data.appName + " account email address.</p>\n            <p style=\"text-align:center\">Verify this email address by clicking the button below</p>\n            <a style=\"display:block;margin:auto;text-align:center;margin-top:2rem;margin-bottom:2rem;text-decoration:none;\" href=\"http:localhost:8080/v1/users/confirm/" + data.uuid + "\"><button style=\"padding:1rem;color:#fff;background:#553d83;display:block;margin:auto;text-align:center;border:none;outline:none;\">Confirm Email Address</button></a>\n\n            <p style=\"padding:7px;text-align:center;\">Or copy and paste the below link to your browser</p>\n            <p style=\"color:blue;text-align:center\">http:localhost:8080/v1/users/confirm/" + data.uuid + "</p>\n            ";
                             mailer_1.default(data.email, "Confirm Email Addresss", body || "this is to test out our application click https://gmail.com");
                         }
                         catch (err) {
@@ -222,7 +222,7 @@ function getApiKey(req, res, next) {
 exports.getApiKey = getApiKey;
 function confirmEmail(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var uuid, isUuidValid;
+        var uuid, isUuidValid, user, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -235,13 +235,34 @@ function confirmEmail(req, res, next) {
                     if (!isUuidValid) {
                         next(new customError_1.default("uuid is not valid"));
                     }
-                    try {
-                        //await _confirmEmail(uuid:string)
-                    }
-                    catch (error) {
-                        next(error);
-                    }
-                    return [2 /*return*/];
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, auth_service_1._confirmEmail(uuid)
+                        // res.redirect('/v1/users/login');
+                        //window.location.href = "/v1/users/login"
+                        //    res.status(200).send({
+                        //     success: true,
+                        //     message: "User email address confirmed",
+                        //     data: user || null,
+                        //   });
+                    ];
+                case 3:
+                    user = _a.sent();
+                    // res.redirect('/v1/users/login');
+                    //window.location.href = "/v1/users/login"
+                    //    res.status(200).send({
+                    //     success: true,
+                    //     message: "User email address confirmed",
+                    //     data: user || null,
+                    //   });
+                    res.send("Email address  confirmed. revisit our site to log into your account");
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_1 = _a.sent();
+                    next(error_1);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });

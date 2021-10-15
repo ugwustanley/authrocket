@@ -7,12 +7,11 @@ import {generateKey} from '../middleware/keyServices'
 
 const route = Router()
 
+route.get("/confirm/:id", confirmEmail)
 
 route.post('/register' , registerValidator, userRegister )
 
 route.post("/login", loginValidator , userLogin)
-
-route.get("/confirm/:id", confirmEmail)
 
 route.use(RequestAuthentication)
 

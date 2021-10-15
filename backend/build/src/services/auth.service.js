@@ -117,8 +117,12 @@ var _getUsers = function (apiKey) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports._getUsers = _getUsers;
 var _confirmEmail = function (uuid) { return __awaiter(void 0, void 0, void 0, function () {
+    var user;
     return __generator(this, function (_a) {
-        return [2 /*return*/];
+        user = mongoose_models_1.User.findOneAndUpdate({ uuid: uuid }, { $set: { isEmailVerified: true } }, { new: true });
+        if (!user)
+            return [2 /*return*/];
+        return [2 /*return*/, user];
     });
 }); };
 exports._confirmEmail = _confirmEmail;
