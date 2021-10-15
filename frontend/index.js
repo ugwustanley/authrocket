@@ -58,10 +58,15 @@ class Authentication {
           this.payload = payload || null
           
           const details = this.registerJSON()
-
-             axios.post('http://localhost:8080/v1/users/register', details).then(user =>{
+          console.log(details)
+             axios.post('http://localhost:8080/v1/users/register', details,{
+                headers:{
+                    "Content-type":"application/json: charset=UTF-8"
+                }
+             }).then(user =>{
                  console.log(user)
              }).catch(err => {console.log(err, err.message)})
+           // axios.post("https://google.com", {}).then(data => console.log("yes")).catch(err => console.log(err))
 
             // if(user){
             //   console.log(user)
